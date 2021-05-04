@@ -306,7 +306,7 @@ dasm_put(Dst, 0, num);
 make -i
 make test_jit_toy
 ```
-編譯最dynasm 的 jit 
+編譯 dynasm 的 jit 
 ```bash
 make jit_dynasm
 make test_jit_dynasm
