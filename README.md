@@ -91,11 +91,11 @@ JIT Compiler 引入，使我們可以達到動態編譯的技術，以下以 Jav
 如上圖當程式碼開始"暖"起來，Baseline compiler 就會開始做事，根據[此篇問答](https://stackoverflow.com/questions/59638327/what-is-a-baseline-compiler)
 >baseline compiler is to generate bytecode or machine code as fast as possible. This output code (machine code or intermediate code) however is not very optimized for a processor, hence it's very inefficient and slow in runtime.
 
-baseline compiler 盡快幫我們產生 bytecode 或是 machine code，baseline compiler 會把**函數的每一行編譯成一個 stub**，換言之，是以函數的航為編譯單位，這些 stub 會被行號以及`變數型別`索引。如果監控者看到同樣的程式碼再出現一遍而且型別相同，就會把剛剛編譯過的程式碼直接丟回去執行，不用重編譯。可以加速執行時間。然而，baseline compiler 可能會做一點點最佳化處理，但是又不想耽誤執行時間太久，引此這些 code 並不是真正最佳化的code。頂多算是稍微好的code，但是執行效率仍然不夠好。
-然而，如果這段程式碼真的很"燙"，甚至占了大多數執行時間，那就非常有必要花費額外時間去做最佳化處理。
+baseline compiler 盡快幫我們產生 bytecode 或是 machine code，baseline compiler 會把**函數的每一行編譯成一個 stub**，換言之，是以函數的每一行為編譯單位，這些 stub 會被行號以及`變數型別`索引。如果監控者看到同樣的程式碼再出現一遍而且型別相同，就會把剛剛編譯過的程式碼直接丟回去執行，不用重編譯。可以加速執行時間。然而，baseline compiler 可能會做一點點最佳化處理，但是又不想耽誤執行時間太久，因此這些 code 並不是真正最佳化的code。頂多算是稍微好的code，但是執行效率仍然不夠好。
+然而，如果這段程式碼真的很"燙(hot)"，甚至占了大多數執行時間，那就非常有必要花費額外時間去做最佳化處理。
 
 ![](https://hacks.mozilla.org/files/2017/02/02-06-jit09-768x560.png)
-如上圖，上圖左邊是 baseline compiler 編譯好的程式碼(那些像白紙的東西)，不過如果這段程式碼真的很"燙"，monitor 會把這段程式碼送去 Optimizing compiler，產生出更高效能的程式碼。但是編譯時需要符合某個假設，那就是物件一致性。舉個例子，因為 javascript 是動態語言，可以在一個陣列裡面裝不同型別的物件，可能前 99 個都是房子，最後一個物件卻是怪物☢，所以compiled code 在跑之前需要確定好假設是正確的，如果是對的，就跑這個 code，如果突然變怪物，那就會把這段最佳化的程式碼給丟掉💔，然後去跑 baseline compiled 版本，這個丟掉optimize 返回baseline過程稱為 **解最佳化或反優化(deoptimization)**
+如上圖，上圖左邊是 baseline compiler 編譯好的程式碼(那些像白紙的東西)，不過如果這段程式碼真的很"燙(hot)"，monitor 會把這段程式碼送去 Optimizing compiler，產生出更高效能的程式碼。但是編譯時需要符合某個假設，那就是物件一致性。舉個例子，因為 javascript 是動態語言，可以在一個陣列裡面裝不同型別的物件，可能前 99 個物件都是房子，最後一個物件卻是怪物☢，所以 compiled code 在跑之前需要確定好假設是正確的，如果是對的，就跑這個 code，如果突然變怪物，那就會把這段最佳化的程式碼給丟掉💔，然後去跑 baseline compiled 版本，這個丟掉optimize 返回baseline過程稱為 **解最佳化或反優化(deoptimization)**
 
 雖然 Optimizing compiler 可以產生出更高效能的程式碼，但是可能會造成不可預期的效能問題，假設有個陣列有100個物件，這裡用虛擬碼宣告
 ```
@@ -113,20 +113,19 @@ function arraySum(arr) {
   }
 }
 ```
-`+=` 看起來一個動作就好，但是因為是動態型別，實際上偷偷執行更多東西，例如 javascript 允許字串和整數相加，例如 
+`+=` 看起來一個動作就好，感覺蠻簡單的，但是因為是動態型別，實際上背後偷偷執行更多東西，像是因為javascript是弱型別語言，javascript 允許字串和整數相加，例如 
 ``` javascript
 var a = 123 + '456'
 // a is '123456'
 ```
-`sum += arr[i]`，可能前 99 個都是整數，但是最後一個就是字串，導致剛剛最佳化程式碼都不能用，因為從整數的相加變成字串的相加，兩者的運算有本質上的不同。所以 JIT 會看這段 stub 是 monomorphic(不變的) 或是 polymorphic(變動的) (型別是否都相同)。如下圖
+`sum += arr[i]`，可能前 99 個都是整數，但是最後一個就是字串，導致剛剛最佳化程式碼不能用要捨棄，因為從整數的相加變成字串的相加，兩者的運算有本質上的不同。所以 JIT 會看這段 stub 是 monomorphic(不變的) 或是 polymorphic(變動的) (型別是否都相同)。如下圖
 
 ![](https://hacks.mozilla.org/files/2017/02/02-08-decision_tree01-768x394.png)
 
 ![](https://hacks.mozilla.org/files/2017/02/02-09-jit_loop02-768x496.png)
 
-假設沒有 Optimizing compiler，當這段code 要執行時，JIT 就要檢查自己這堆型別問題，在一個迴圈下，必須要不斷重複問這些問題，但其實可以加速執行，就出現
-Optimizing compiler，compiler 只需要把整段函數編譯，每次執行時都先檢查
-`arr[i]`的型別即可，**根本不用每一行都檢查型別**，如下圖
+假設沒有 Optimizing compiler，當這段code 要執行時，JIT 就要不斷檢查這些型別問題，在一個迴圈下，必須要不斷重複檢查審視這些問題，但其實可以加速執行，就出現
+Optimizing compiler，compiler 只需要把整段函數編譯，每次執行時都先檢查`arr[i]`的型別即可，**根本不用每一行都檢查型別**，如下圖
 ![](https://hacks.mozilla.org/files/2017/02/02-10-jit_loop02-768x488.png)
 
 而火狐瀏覽器有做最佳化的處理，例如JIT再進入迴圈前會預先判斷是否整個陣列是整數型，減輕判斷時的負擔。
