@@ -9,17 +9,18 @@
 
 ## 未完成工作
 1. BF compiler assembly code 需要釐清
-2. Part 3. 最佳化方式
+2. [lets-write-some-x86-64](https://nickdesaulniers.github.io/blog/2014/04/18/lets-write-some-x86-64/) 熟練撰寫組合語言
+3. Part 3 的幾種最佳化方式
 
 |完成|參考網站|最佳化方式|
 |--------|-------|---------|
-|x | [interpreter-compiler-jit](https://nickdesaulniers.github.io/blog/2015/05/25/interpreter-compiler-jit/)| 直接在直譯器內放入 machine code|
-|x | [JIT 编译器原理简述/实现 Brainfuck 解释器与 IR 优化](http://accu.cc/content/jit_tour/brainfuck_interpreter/)| 針對 IR 做最佳化 |
-|x|[Adventures in JIT compilation: Part 1 - an interpreter](https://eli.thegreenplace.net/2017/adventures-in-jit-compilation-part-1-an-interpreter/)|直接在直譯器進行加速
-|x|[Hello, JIT World: The Joy of Simple JITs](https://blog.reverberate.org/2012/12/hello-jit-world-joy-of-simple-jits.html)| 利用 Dynasm 做 JIT |
-|x|[2016q3 Homework5 - JIT compiler](https://hackmd.io/@nKngvyhpQdGagg1V6GKLwA/HJjoxbvke?type=view)|利用 Dynasm 做 JIT|
-|x|[虛擬機器設計與實作](https://hackmd.io/@sysprog/SkBsZoReb?type=view)| 利用 Dynasm 做 JIT|
-|x|[lets-write-some-x86-64](https://nickdesaulniers.github.io/blog/2014/04/18/lets-write-some-x86-64/)| 更熟悉組合語言|
+|❌ | [interpreter-compiler-jit](https://nickdesaulniers.github.io/blog/2015/05/25/interpreter-compiler-jit/)| 直接在直譯器內放入 machine code|
+|❌ | [JIT 编译器原理简述/实现 Brainfuck 解释器与 IR 优化](http://accu.cc/content/jit_tour/brainfuck_interpreter/)| 針對 IR 做最佳化 |
+|❌|[Adventures in JIT compilation: Part 1 - an interpreter](https://eli.thegreenplace.net/2017/adventures-in-jit-compilation-part-1-an-interpreter/)|直接在直譯器進行加速
+|❌|[Hello, JIT World: The Joy of Simple JITs](https://blog.reverberate.org/2012/12/hello-jit-world-joy-of-simple-jits.html)| 利用 Dynasm 做 JIT |
+|❌|[2016q3 Homework5 - JIT compiler](https://hackmd.io/@nKngvyhpQdGagg1V6GKLwA/HJjoxbvke?type=view)|利用 Dynasm 做 JIT|
+|❌|[虛擬機器設計與實作](https://hackmd.io/@sysprog/SkBsZoReb?type=view)| 利用 Dynasm 做 JIT|
+
 
 # Why Compiler ?  
 1. 為什麼需要編譯器 ? 為了更快、更有效率的使用硬體，如 CPU、GPU等，也希望程式碼可以跑在不同硬體平台上 
@@ -146,7 +147,7 @@ Optimizing compiler，compiler 只需要把整段函數編譯，每次執行時�
 
 7. [深度學習編譯器學習筆記和實踐體會 (好專欄!) ](https://www.zhihu.com/column/c_1169609848697663488)
 
-8. [Jserv 窮得只剩下 compiler](https://www.slideshare.net/jserv/what-can-compilers-do-for-us)
+8. [Jserv 演講- 窮得只剩下 compiler](https://www.slideshare.net/jserv/what-can-compilers-do-for-us)
 
 9. [A crash course in just-in-time (JIT) compilers](https://hacks.mozilla.org/2017/02/a-crash-course-in-just-in-time-jit-compilers/)
 

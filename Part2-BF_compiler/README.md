@@ -208,7 +208,7 @@ if 遇到 [ 且 count == 0 : 直接跳至最後的 ]
 
 
 ## 2.3 打造BF的編譯器 
-這裡稍微複雜一點，因為我們要根據不同的指令集架構，把 BF 轉成平台對應的組合語言，這裡就不向上面直譯器一樣有可移植性，因為要產生平台相依的程式碼。這裡直接用[Jserv's Github](https://github.com/jserv/jit-construct)，我的組合語言能力不太好 ༼ つ ◕_◕ ༽つ，以下是x64組合語言的架構，仔細講解的地方可以參考[interpreter-compiler-jit](https://nickdesaulniers.github.io/blog/2015/05/25/interpreter-compiler-jit/)
+這裡稍微複雜一點，因為我們要根據不同的指令集架構，把 BF 轉成平台對應的組合語言，這裡就不向上面直譯器一樣有可移植性，因為要產生平台相依的程式碼。這裡直接用[Jserv's Github](https://github.com/jserv/jit-construct)，我的組合語言能力不太好 ༼ つ ◕_◕ ༽つ，以下是x64架構的組合語言，仔細講解的地方可以參考[interpreter-compiler-jit](https://nickdesaulniers.github.io/blog/2015/05/25/interpreter-compiler-jit/)
 
 ```C
 #include <stdio.h>
