@@ -4,8 +4,22 @@
 |Part|目標| 進度 |
 |----|----| ----- | 
 |Part 1. Simple JIT| 利用 Dynasm 幫助建立簡單的 JIT | ✔
-|Part 2. BF compiler| 建立簡單的 Brainfuck compiler 和 interpreter | 💨(ing)|
+|Part 2. BF compiler| 建立簡單的 Brainfuck compiler 和 interpreter |  ✔|
 |Part 3. BF JIT| 利用 Dynasm 幫助建立 BF JIT，以及做一些優化測試 | ❌ |
+
+## 未完成工作
+1. BF compiler assembly code 需要釐清
+2. Part 3. 最佳化方式
+
+|完成|參考網站|最佳化方式|
+|--------|-------|---------|
+|x | [interpreter-compiler-jit](https://nickdesaulniers.github.io/blog/2015/05/25/interpreter-compiler-jit/)| 直接在直譯器內放入 machine code|
+|x | [JIT 编译器原理简述/实现 Brainfuck 解释器与 IR 优化](http://accu.cc/content/jit_tour/brainfuck_interpreter/)| 針對 IR 做最佳化 |
+|x|[Adventures in JIT compilation: Part 1 - an interpreter](https://eli.thegreenplace.net/2017/adventures-in-jit-compilation-part-1-an-interpreter/)|直接在直譯器進行加速
+|x|[Hello, JIT World: The Joy of Simple JITs](https://blog.reverberate.org/2012/12/hello-jit-world-joy-of-simple-jits.html)| 利用 Dynasm 做 JIT |
+|x|[2016q3 Homework5 - JIT compiler](https://hackmd.io/@nKngvyhpQdGagg1V6GKLwA/HJjoxbvke?type=view)|利用 Dynasm 做 JIT|
+|x|[虛擬機器設計與實作](https://hackmd.io/@sysprog/SkBsZoReb?type=view)| 利用 Dynasm 做 JIT|
+|x|[lets-write-some-x86-64](https://nickdesaulniers.github.io/blog/2014/04/18/lets-write-some-x86-64/)| 更熟悉組合語言|
 
 # Why Compiler ?  
 1. 為什麼需要編譯器 ? 為了更快、更有效率的使用硬體，如 CPU、GPU等，也希望程式碼可以跑在不同硬體平台上 
