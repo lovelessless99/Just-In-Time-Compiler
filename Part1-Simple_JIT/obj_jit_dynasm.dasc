@@ -1,0 +1,37 @@
+// DynASM directives.
+|.arch x64
+|.actionlist actions
+
+// This define affects "|" DynASM lines.  "Dst" must
+// resolve to a dasm_State** that points to a dasm_State*.
+#define Dst &state
+
+#include <stdio.h>
+int main(int argc, char *argv[]) {
+        
+        dasm_State *state;
+        initjit(&state, actions);
+
+        //|  push   rbp
+        //|  mov    rsp, rbp
+        |  mov    dword [rsp-0x4], edi
+        |  mov    dword [rsp-0x8], esi 
+        |  mov    esi, dword [rsp-0x4] 
+        |  imul   esi, dword [rsp-0x8]  
+        |  mov    eax,esi
+        |  ret
+        //|  pop    rbp
+
+        // Link the code and write it to executable memory.
+        int (*fptr)() = jitcode(&state);
+        
+
+        // Call the JIT-ted function.
+        int ret = fptr(5, 11);
+        printf("%d * %d = %d\n", 5, 11, ret);
+
+        // Free the machine code.
+        free_jitcode(fptr);
+
+        return ret;
+}

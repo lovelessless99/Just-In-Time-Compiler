@@ -59,14 +59,14 @@ int main(int argc,char* argv[])
 }
 ```
 ```bash
-make ; ./jit_toy 5566; echo $?
+make ; ./jit_toy 55; echo $?
 ```
 
 
 # 二、Hello, DynASM World!
 [DynASM 官方網頁](https://luajit.org/dynasm.html)，特色如下
 
-1. DynASM 是一個程式碼生成的動態組譯器
+1. DynASM 是一個程式碼生成的動態組譯器(code generator)
 2. 為 `LuaJIT` 開發主要工具 
 3. DynASM 適用以下情境
 
@@ -311,11 +311,236 @@ make test_jit_toy
 make jit_dynasm
 make test_jit_dynasm
 ```
+----
+# 三、揉合 Objdump
+
+剛剛最一開始的 simple jit，是直接用 machine code 寫入**可執行的記憶體區段**，再指定給函數指標做執行。之後又談論到
+>JIT 最麻煩的地方，就是要編碼指令，你必須了解你環境的 CPU 指令及架構，你要去讀厚厚一本手冊
+
+所以才會使用到第二章節的`Dynasm`的引擎或工具，只要利用該指令集架構的組合語言，`Dynasm`就會很友善的來幫我們生成C語言程式碼。
+
+不過有些人(像我)，平常鮮少碰到組合語言。可能連組合語言蠻陌生的。有組合語言的這些範例程式碼可能還沒辦法使用的駕輕就熟。因此受到[basic-jit](https://nickdesaulniers.github.io/blog/2013/04/03/basic-jit/)這篇文章的啟發，可以先用其他方式來得到機器碼，進而較輕鬆實現simple JIT 的功能，**暫時**跳過組合語言的部分。(但以後還是要還辣，God，人生好難 = =)
+
+那就是使用 `objdump`這個反組譯工具。可以先將你的函式編譯成一個`.o`檔案。之後再利用 objdump 這個工具幫你反組譯得到組合語言跟機器碼的對照，接下來就來示範一下如何使用。
+
+首先，先建立一個`mul.c`檔案
+```C
+int mul(int a, int b)
+{
+        return a * b;
+}
+```
+
+之後編譯成`.o`檔，再利用`objdump`這個工具反組譯
+
+接下來，輸入指令
+```bash
+objdump -j .text -d mul.o -M intel
+```
+`-j` : 只顯示指定 section 的區域(section 的概念跟 ELF 檔案格式有關，以後會談到)
+![](https://i.imgur.com/g3D5aIM.png)
+
+`-d` : 你要反組譯哪個二進制檔案(*.o, 執行檔等)
+
+`-M` : 選擇你要反組譯的指令集架構組合語言
+
+其他選項不贅談，可以輸入 `objdump -H` 看看
+
+之後得到訊息
+```
+mul.o:     file format elf64-x86-64
+
+Disassembly of section .text:
+
+0000000000000000 <mul>:
+   0:   55                      push   rbp
+   1:   48 89 e5                mov    rbp,rsp
+   4:   89 7d fc                mov    DWORD PTR [rbp-0x4],edi
+   7:   89 75 f8                mov    DWORD PTR [rbp-0x8],esi
+   a:   8b 75 fc                mov    esi,DWORD PTR [rbp-0x4]
+   d:   0f af 75 f8             imul   esi,DWORD PTR [rbp-0x8]
+  11:   89 f0                   mov    eax,esi
+  13:   5d                      pop    rbp
+  14:   c3                      ret
+```
+
+當然，在這裡你也可以不用指定 intel 架構
+```bash
+objdump -j .text -d mul.o
+```
+得到
+```
+mul.o:     file format elf64-x86-64
 
 
+Disassembly of section .text:
+
+0000000000000000 <mul>:
+   0:   55                      push   %rbp
+   1:   48 89 e5                mov    %rsp,%rbp
+   4:   89 7d fc                mov    %edi,-0x4(%rbp)
+   7:   89 75 f8                mov    %esi,-0x8(%rbp)
+   a:   8b 75 fc                mov    -0x4(%rbp),%esi
+   d:   0f af 75 f8             imul   -0x8(%rbp),%esi
+  11:   89 f0                   mov    %esi,%eax
+  13:   5d                      pop    %rbp
+  14:   c3                      retq
+```
+這個對我們很有幫助，我們得到機器碼跟它對應的組合語言，也就是說
+
+1. 我們可以利用機器碼完成第一部份的simple JIT
+2. 我們也可以指定指令集架構後結合對應的組合語言跟C程式，利用方才的`dynasm` 工具幫我們進行處理
+
+一魚兩吃 ? 不好嗎 😅，不過還是需要理解組合語言跟指令集架構的相關知識，但這個工具著實可以輔助我們更快達成目標。
+
+接下來就把這段 code 拿去用在第一部分跟第二部分吧~~
+
+首先第一部分，就是比較人工一點，把機器碼全部都輸入字元陣列內，再指定到mmap 分配的可執行記憶體區段。
+
+`obj_jit_boy.c`
+```C
+#include <stdio.h> // printf
+#include <string.h> // memcpy
+#include <sys/mman.h> // mmap, munmap
+
+int main () {
+// Hexadecimal x86_64 machine code for: int mul (int a, int b) { return a * b; }
+unsigned char code [] = {
+        0x55, // push rbp
+        0x48, 0x89, 0xe5, // mov rbp, rsp
+        0x89, 0x7d, 0xfc, // mov DWORD PTR [rbp-0x4],edi
+        0x89, 0x75, 0xf8, // mov DWORD PTR [rbp-0x8],esi
+        0x8b, 0x75, 0xfc, // mov esi,DWORD PTR [rbp-04x]
+        0x0f, 0xaf, 0x75, 0xf8, // imul esi,DWORD PTR [rbp-0x8]
+        0x89, 0xf0, // mov eax,esi
+        0x5d, // pop rbp
+        0xc3 // ret
+};
+
+        // allocate executable memory via sys call
+        void* mem = mmap(NULL, sizeof(code), PROT_WRITE | PROT_EXEC,
+                        MAP_ANON | MAP_PRIVATE, -1, 0);
+
+        // copy runtime code into allocated memory
+        memcpy(mem, code, sizeof(code));
+
+        // typecast allocated memory to a function pointer
+        int (*func) () = mem;
+
+        // call function pointer
+        printf("%d * %d = %d\n", 5, 11, func(5, 11));
+
+        // Free up allocated memory
+        munmap(mem, sizeof(code));
+}
+```
+
+再來第二部分，結合組合語言到 dynasm 的方法，這邊要注意幾點
+* 注意指令及架構
+* 不能把剛剛objdump的組語直接複製貼上
+
+> 關於第二點我試過，執行時堆疊的 push 跟 pop 可能dynasm 幫你做了，dynasm 可能要讓你的組語專注在函式功能本身 ? (這點待確認) 
+
+原本
+```
+|  push   rbp
+|  mov    rbp, rsp
+|  mov    dword [rbp-0x4], edi
+|  mov    dword [rbp-0x8], esi 
+|  mov    esi, dword [rbp-0x4] 
+|  imul   esi, dword [rbp-0x8]  
+|  mov    eax,esi
+|  pop    rbp
+|  ret
+```
+稍微修改
+```
+//|  push   rbp
+//|  mov    rsp, rbp
+|  mov    dword [rsp-0x4], edi
+|  mov    dword [rsp-0x8], esi 
+|  mov    esi, dword [rsp-0x4] 
+|  imul   esi, dword [rsp-0x8]  
+|  mov    eax,esi
+|  ret
+//|  pop    rbp
+```
+
+```C
+// DynASM directives.
+|.arch x64
+|.actionlist actions
+
+// This define affects "|" DynASM lines.  "Dst" must
+// resolve to a dasm_State** that points to a dasm_State*.
+#define Dst &state
+
+#include <stdio.h>
+int main(int argc, char *argv[]) {
+        
+        dasm_State *state;
+        initjit(&state, actions);
+
+        
+        |  mov    dword [rsp-0x4], edi
+        |  mov    dword [rsp-0x8], esi 
+        |  mov    esi, dword [rsp-0x4] 
+        |  imul   esi, dword [rsp-0x8]  
+        |  mov    eax,esi
+        |  ret
+
+        // Link the code and write it to executable memory.
+        int (*fptr)() = jitcode(&state);
+        
+
+        // Call the JIT-ted function.
+        int ret = fptr(5, 11);
+        printf("%d * %d = %d\n", 5, 11, ret);
+
+        // Free the machine code.
+        free_jitcode(fptr);
+
+        return ret;
+}
+```
+---
+# 四、Part 1 總結
+在 Part 1，我們實做了下列幾種方法
+
+* 第一部分: 直接把機器碼放進 mmap 可執行記憶體區段執行，困難的點是要先知道功能對應的機器碼
+
+* 第二部分: 利用 dynasm code generator 幫助我們生成機器碼，困難的點是要熟悉 dynasm 怎麼用，以及需要先具備一些組語的知識
+
+* 第三部分: 我們利用稍微繞遠路的方式，先編譯函數，再用 objdump 反組譯得到機器碼跟組合語言，可以稍微改善前面兩部分的困難的點
+
+但是要學編譯器跟 JIT，組合語言的知識遲早都得補完🤣
+
+---
+# 五、專案執行方式
+1. 執行第一部份的 Simple JIT
+```bash
+make jit_toy; ./jittoy 56; echo $?
+```
+記得測試整數 **<=255**，因為程式回傳狀態只有 8 bits，小心溢位會出現 mod 256 的結果 
+
+2. 執行第二部份的 dynasm JIT
+```bash
+make jit_dynasm; ./jit_dynasm 56; echo $?
+```
+
+3. 執行第三部份的 objdump + simple JIT
+
+```bash
+make clean; make obj_jit_toy; ./obj_jit_toy
+```
+
+4. 執行第三部份的 objdump + obj_jit_dynasm
+```bash
+make clean; make obj_jit_dynasm; ./obj_jit_dynasm
+```
 
 
-
+----
 # 參考網站
 1. [Hello, JIT World: The Joy of Simple JITs](https://blog.reverberate.org/2012/12/hello-jit-world-joy-of-simple-jits.html)
 
@@ -326,6 +551,9 @@ make test_jit_dynasm
 4. [JIT 編譯器](http://accu.cc/content/jit_tour/brainfuck_interpreter/)
 
 5. [jitdemo 的 github ](https://github.com/haberman/jitdemo)
+
+6. [basic-jit](https://nickdesaulniers.github.io/blog/2013/04/03/basic-jit/)
+
 
 # 延伸閱讀
 1.  [Matthew Page - How to JIT: Writing a Python JIT from scratch in pure Python - PyCon 2019](https://www.youtube.com/watch?v=2BB39q6cqPQ&t=905s)
