@@ -1,4 +1,4 @@
-# Brainfuck
+# Part2 - Brainfuck compiler and Interpreter
 用最簡單的圖靈完全語言 Brainfuck 程式，寫一個 Brainfuck 的 compiler 及 interpreter
 
 # 一、Brainfuck 簡介

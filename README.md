@@ -5,6 +5,7 @@
 |----|----| ----- | 
 |Part 1. Simple JIT| 利用 Dynasm 幫助建立簡單的 JIT | ✔
 |Part 2. BF compiler| 建立簡單的 Brainfuck compiler 和 interpreter |  ✔|
+|Part 3. Part3-BF_compiler_interpreter_comparison| 比較 Part 2 Brainfuck compiler 和 interpreter, 及一些優化比較 |  ✔|
 |Part 3. BF JIT| 利用 Dynasm 幫助建立 BF JIT，以及做一些優化測試 | ❌ |
 
 ## 未完成工作
