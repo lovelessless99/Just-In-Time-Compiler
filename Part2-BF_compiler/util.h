@@ -3,7 +3,6 @@
 #include <stdlib.h>
 
 // prints to stderr than exits with code 1
-static inline
 void err(const char * const msg)
 {
 	fprintf(stderr, "%s\n", msg);
@@ -11,7 +10,6 @@ void err(const char * const msg)
 }
 
 // returns a heap allocated string, caller needs to free
-static inline
 char *read_file(const char * const filename)
 {
 	if (filename == NULL) return NULL;

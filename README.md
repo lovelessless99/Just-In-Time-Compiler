@@ -6,12 +6,12 @@
 |Part 1. Simple JIT| 利用 Dynasm 幫助建立簡單的 JIT | ✔
 |Part 2. BF compiler| 建立簡單的 Brainfuck compiler 和 interpreter |  ✔|
 |Part 3. Part3-BF_compiler_interpreter_comparison| 比較 Part 2 Brainfuck compiler 和 interpreter, 及一些優化比較 |  ✔|
-|Part 3. BF JIT| 利用 Dynasm 幫助建立 BF JIT，以及做一些優化測試 | ❌ |
+|Part 4. BF JIT| 利用 Dynasm 幫助建立 BF JIT，以及做一些優化測試 | ❌ |
 
 ## 未完成工作
 1. BF compiler assembly code 需要釐清
 2. [lets-write-some-x86-64](https://nickdesaulniers.github.io/blog/2014/04/18/lets-write-some-x86-64/) 熟練撰寫組合語言
-3. Part 3 的幾種最佳化方式
+3. Part 4 的幾種最佳化方式
 
 |完成|參考網站|最佳化方式|
 |--------|-------|---------|

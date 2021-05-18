@@ -6,7 +6,7 @@
 
 
 # 測試程式 - 碎形(mandelbrot) 
-這邊給幾條連結簡介碎形，為[曼德博集合](https://zh.wikipedia.org/wiki/%E6%9B%BC%E5%BE%B7%E5%8D%9A%E9%9B%86%E5%90%88)，是個很複雜的圖形，相信有些人可能有印象這個圖片
+碎形為[曼德博集合](https://zh.wikipedia.org/wiki/%E6%9B%BC%E5%BE%B7%E5%8D%9A%E9%9B%86%E5%90%88)，是個很複雜的圖形，相信有些人可能有印象這個圖片
 
 ![mandelbrot](https://uk.mathigon.org/content/fractals/images/mandelbrot.png)
 
