@@ -723,7 +723,6 @@ int main(int argc, char *argv[])
 ## 4.2 Brainfuck JIT compiler with opcode
 > * [參考網站](https://nickdesaulniers.github.io/blog/2015/05/25/interpreter-compiler-jit/)
 > * [參考網站的Github](https://github.com/nickdesaulniers/bf_interpreter_jit_compiler)
-> 程式碼放在 `opt_1.c`
 
 
 其實這裡的實作方法，和 Part2 的 compiler 相同，主要差異是將原先**印出組合語言直接變成機器碼，再直接執行**，就是一種動態編譯技術
