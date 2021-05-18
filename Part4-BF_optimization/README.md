@@ -484,7 +484,7 @@ int check_loops(char *p,int *index,int *mult)
 
 ```
 
-再來是仿照上述例子寫的 case 4 move loop 程式碼，但之後經過測試，加了反而會變慢 4 - 5 秒左右
+再來是仿照上述例子寫的 case 4 move-loop 程式碼
 ```C
 int check_move_loops(uint8_t *p) 
 {
@@ -673,17 +673,17 @@ void interpreter(const char input[])
                                                 i  = jumptable[i];
                                                 break;
                                         }
-                                        // else 
-                                        // {
-                                        //         // move loop [>>>>>>>>]
-                                        //         int mv_count = check_move_loops(ptr);
-                                        //         if(mv_count > 0)
-                                        //         {
-                                        //                 for(;*ptr;  ptr += mv_count );
-                                        //                 i  = jumptable[i];
-                                        //                 break;
-                                        //         } 
-                                        // }
+                                        else 
+                                        {
+                                                // move loop [>>>>>>>>]
+                                                int mv_count = check_move_loops(ptr);
+                                                if(mv_count > 0)
+                                                {
+                                                        for(;*ptr;  ptr += mv_count );
+                                                        i  = jumptable[i];
+                                                        break;
+                                                } 
+                                        }
                                 }
 
                                 else     // counter = 0, go to the end bracket

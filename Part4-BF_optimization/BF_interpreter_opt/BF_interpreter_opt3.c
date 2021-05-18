@@ -165,17 +165,17 @@ void interpreter(const char input[])
                                                 i  = jumptable[i];
                                                 break;
                                         }
-                                        // else 
-                                        // {
-                                        //         // move loop [>>>>>>>>]
-                                        //         int mv_count = check_move_loops(ptr);
-                                        //         if(mv_count > 0)
-                                        //         {
-                                        //                 for(;*ptr;  ptr += mv_count );
-                                        //                 i  = jumptable[i];
-                                        //                 break;
-                                        //         } 
-                                        // }
+                                        else 
+                                        {
+                                                // move loop [>>>>>>>>]
+                                                int mv_count = check_move_loops(ptr);
+                                                if(mv_count > 0)
+                                                {
+                                                        for(;*ptr;  ptr += mv_count );
+                                                        i  = jumptable[i];
+                                                        break;
+                                                } 
+                                        }
                                 }
 
                                 else     // counter = 0, go to the end bracket
