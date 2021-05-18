@@ -1,29 +1,14 @@
 # Just In Time Compiler
+> 請參考 [網頁好讀版](https://lovelessless99.github.io/coding-hub/)
 
-# 專案目標
-|Part|目標| 進度 |
-|----|----| ----- | 
-|Part 1. Simple JIT| 利用 Dynasm 幫助建立簡單的 JIT | ✔
-|Part 2. BF compiler| 建立簡單的 Brainfuck compiler 和 interpreter |  ✔|
-|Part 3. Part3-BF_compiler_interpreter_comparison| 比較 Part 2 Brainfuck compiler 和 interpreter, 及一些優化比較 |  ✔|
-|Part 4. BF optimization| 對 Part 3  做一些效能最佳化 | Interpreter optimization 實作完 |
-|Part 5. BF comparison| 將所有的程式做一次性的結果探討 | ❌ |
-
-
-
-## 未完成工作
-1. BF compiler assembly code 需要釐清
-2. [lets-write-some-x86-64](https://nickdesaulniers.github.io/blog/2014/04/18/lets-write-some-x86-64/) 熟練撰寫組合語言
-3. Part 4 的 最佳化方式
-
-|完成|參考網站|最佳化方式|
-|--------|-------|---------|
-|❌ | [interpreter-compiler-jit](https://nickdesaulniers.github.io/blog/2015/05/25/interpreter-compiler-jit/)| 直接在直譯器內放入 machine code|
-|✔ | [JIT 编译器原理简述/实现 Brainfuck 解释器与 IR 优化](http://accu.cc/content/jit_tour/brainfuck_interpreter/)| 針對 IR 做最佳化 |
-|✔|[Adventures in JIT compilation: Part 1 - an interpreter](https://eli.thegreenplace.net/2017/adventures-in-jit-compilation-part-1-an-interpreter/)|直接在直譯器進行加速
-|✔|[Hello, JIT World: The Joy of Simple JITs](https://blog.reverberate.org/2012/12/hello-jit-world-joy-of-simple-jits.html)| 利用 Dynasm 做 JIT |
-|❌|[2016q3 Homework5 - JIT compiler](https://hackmd.io/@nKngvyhpQdGagg1V6GKLwA/HJjoxbvke?type=view)|利用 Dynasm 做 JIT|
-|❌|[虛擬機器設計與實作](https://hackmd.io/@sysprog/SkBsZoReb?type=view)| 利用 Dynasm 做 JIT|
+# 專案說明
+|Part|說明|
+|----|----| 
+|Part 1. Simple JIT| 利用 Dynasm 幫助建立簡單的 JIT |
+|Part 2. BF compiler| 建立簡單的 Brainfuck compiler 和 interpreter |
+|Part 3. Part3-BF_compiler_interpreter_comparison| 比較 Brainfuck compiler 和 interpreter, 及一些優化比較 |
+|Part 4. BF optimization| 直譯器優化、實作即時編譯器 | 
+|Part 5. Cross_comparison| 將所有的程式做一次性的結果探討 |
 
 
 # Why Compiler ?  

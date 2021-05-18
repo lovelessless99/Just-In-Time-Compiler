@@ -1,5 +1,5 @@
-#ifndef __OPT_1_H
-#define __OPT_1_H
+#ifndef __JIT_OPCODE_H
+#define __JIT_OPCODE_H
 #include <stdio.h>
 #include <stdlib.h>
 // returns a heap allocated string, caller needs to free
