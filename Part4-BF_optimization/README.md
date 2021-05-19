@@ -1067,7 +1067,7 @@ case '[':
 3. compiler with  contraction + loop-pattern 
 4. asmjit, llvm
 
-那在下一章節 Part 5，我們會開始進行全方位的比較。終於迎來了大亂鬥的時刻。
+那在下一章節 Part 5，我們會開始進行全方位的比較，終於迎來了大亂鬥的時刻。
 
 ### 執行方式
 只要進到 `Part4-BF_optimization` 資料夾，下指令

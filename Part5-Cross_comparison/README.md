@@ -72,7 +72,7 @@ make
 
 
 ## 5.4 結尾和未來工作
-我們實作了不同的方法去執行運算量大的碎形 brainfuck 程式檔，最後利用及時編譯技術加上一些最佳化方法，把普通的 interpreter 效率提升 120 倍，執行只需要 1秒，可以說是非常值得使用的技術。至於未來工作是加入 LLVM 及 asmjit 這兩個工具幫我們建立 JIT 編譯器，並且加入比較，且把組合語言的基礎打好😀。
+我們實作了不同的方法去執行運算量大的碎形 brainfuck 程式檔，最後利用即時編譯技術加上一些最佳化方法，把普通的 interpreter 效率提升 120 倍，執行只需要 1秒，可以說是非常值得使用的技術。至於未來工作是加入 LLVM 及 asmjit 這兩個工具幫我們建立 JIT 編譯器，並且加入比較，且把組合語言的基礎打好😀。
 
 ## 5.5 參考連結 (特別感謝的網站)
 1. [Interpreter, Compiler, JIT](https://nickdesaulniers.github.io/blog/2015/05/25/interpreter-compiler-jit/)
