@@ -1,7 +1,7 @@
 # Just In Time Compiler
 ## 想看本 JIT compiler 專案美美的教學請到 [網頁好讀版](https://lovelessless99.github.io/coding-hub/)😀
 
-在本篇文章，先對本專案的進行一個簡介，介紹每一個 Part 的目的，並且介紹編譯器跟即時編譯器的目前技術發展，最後以 javascript 為例解釋即時編譯技術。
+在本篇文章，先對本專案的進行一個簡介，介紹每一個 Part 的目的，並且介紹編譯器跟及時編譯器的目前技術發展，最後以 javascript 為例解釋及時編譯技術。
 
 # 一、專案說明
 大家有沒有看過電影小姐好白，真的是我超愛的喜劇😆，百看不膩，在戲裡面，兩個黑人警探假扮兩個千金大小姐，布蘭妮威爾森跟蒂芬妮威爾森，裡面有個橋段
@@ -15,7 +15,7 @@
 * Boyfriend 男朋友
 * Brainfuck 程式語言，本專案的主角 
 
-回到正題，事實上，Brainfuck 語言短小精幹，是個圖靈完全的程式語言，然而可讀性極差，真的是會讓人 Bitch Fit，然而語法操作的簡單很適合拿來被我們拿來當作編譯器、即時編譯器的來源語言。經過本專案一步步的實作，由 JIT compiler 的牽線，讓 Brainfuck 語言從令人 Bitch Fit 變成我們的 Boyfriend，迫不及待了嗎 ? 接下來就是本專案的主題簡介。
+回到正題，事實上，Brainfuck 語言短小精幹，是個圖靈完全的程式語言，然而可讀性極差，真的是會讓人 Bitch Fit，然而語法操作的簡單很適合拿來被我們拿來當作編譯器、及時編譯器的來源語言。經過本專案一步步的實作，由 JIT compiler 的牽線，讓 Brainfuck 語言從令人 Bitch Fit 變成我們的 Boyfriend，迫不及待了嗎 ? 接下來就是本專案的主題簡介。
 
 
 
@@ -24,7 +24,7 @@
 |1| Simple JIT| 利用 Dynasm 幫助建立簡單的 JIT |
 |2| BF compiler| 建立簡單的 Brainfuck compiler 和 interpreter |
 |3| BF compiler interpreter comparison| 比較 Brainfuck compiler interpreter 和 編譯器最佳化比較 |
-|4| BF optimization| 直譯器最佳化、實作即時編譯器 | 
+|4| BF optimization| 直譯器最佳化、實作及時編譯器 | 
 |5| Cross comparison| 將所有的程式做一次性的結果探討 |
 
 
