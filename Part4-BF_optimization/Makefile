@@ -1,4 +1,4 @@
-SUBDIRS = BF_interpreter_opt/. JIT_Dynasm/. JIT_Opcode/.
+SUBDIRS = BF_interpreter_opt/. JIT_Dynasm/. JIT_Opcode/. JIT_asmjit/.
 
 all: $(SUBDIRS) 
 

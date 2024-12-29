@@ -1,0 +1,3 @@
+[submodule "Part4-BF_optimization/JIT_asmjit/third_party/asmjit"]
+	path = Part4-BF_optimization/JIT_asmjit/third_party/asmjit
+	url = https://github.com/asmjit/asmjit.git
